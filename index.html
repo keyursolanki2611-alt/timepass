@@ -1,0 +1,780 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Design Thinking Studio</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Figtree:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #eef2f5;
+        --ink: #14213d;
+        --muted: #4b5872;
+        --card: #fff;
+        --line: #d5dde5;
+        --y: #ffd84d;
+        --p: #ff9db0;
+        --b: #94d6ff;
+        --g: #b4e8a6;
+        --o: #ffb877;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #0f1626;
+          --ink: #f1f4f9;
+          --muted: #a6b1c6;
+          --card: #1a2440;
+          --line: #2c3860;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #0f1626;
+        --ink: #f1f4f9;
+        --muted: #a6b1c6;
+        --card: #1a2440;
+        --line: #2c3860;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font:
+          400 17px/1.6 Figtree,
+          system-ui,
+          sans-serif;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: "Bricolage Grotesque", Georgia, sans-serif;
+        line-height: 1.08;
+        margin: 0 0 0.5em;
+        letter-spacing: -0.02em;
+      }
+      h1 {
+        font-size: clamp(2.4rem, 7vw, 4.6rem);
+        font-weight: 800;
+      }
+      h2 {
+        font-size: clamp(1.8rem, 4vw, 2.6rem);
+        font-weight: 700;
+      }
+      h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+      }
+      p {
+        margin: 0 0 1em;
+        max-width: 62ch;
+      }
+      nav {
+        position: sticky;
+        top: env(safe-area-inset-top, 0px);
+        z-index: 10;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+        align-items: center;
+        padding: 0.7rem 1.2rem;
+        background: var(--bg);
+        border-bottom: 2px solid var(--ink);
+      }
+      nav b {
+        font:
+          800 1.15rem "Bricolage Grotesque",
+          sans-serif;
+        margin-right: auto;
+      }
+      nav a {
+        color: var(--ink);
+        text-decoration: none;
+        padding: 0.35rem 0.8rem;
+        border-radius: 99px;
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+      nav a.on {
+        background: var(--y);
+        color: #14213d;
+      }
+      nav a:hover {
+        text-decoration: underline;
+      }
+      a:focus-visible,
+      button:focus-visible,
+      textarea:focus-visible {
+        outline: 3px solid #2f6bff;
+        outline-offset: 2px;
+      }
+      main {
+        max-width: 1050px;
+        margin: 0 auto;
+        padding: 2.5rem 1.2rem 4rem;
+      }
+      .page {
+        display: none;
+      }
+      .page.on {
+        display: block;
+      }
+      .btn {
+        display: inline-block;
+        background: var(--ink);
+        color: var(--bg);
+        border: 0;
+        border-radius: 10px;
+        padding: 0.8rem 1.4rem;
+        font:
+          700 1rem Figtree,
+          sans-serif;
+        cursor: pointer;
+        text-decoration: none;
+      }
+      .btn.alt {
+        background: transparent;
+        color: var(--ink);
+        border: 2px solid var(--ink);
+      }
+      .hero {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 2rem;
+        align-items: center;
+        min-height: 60vh;
+      }
+      .wall {
+        position: relative;
+        height: 340px;
+      }
+      .note {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        padding: 14px;
+        font:
+          700 1.05rem/1.2 "Bricolage Grotesque",
+          sans-serif;
+        color: #14213d;
+        box-shadow: 3px 5px 0 rgba(20, 33, 61, 0.25);
+        animation: drop 0.7s cubic-bezier(0.2, 0.9, 0.3, 1.2) backwards;
+      }
+      .note small {
+        display: block;
+        font:
+          500 0.8rem/1.3 Figtree,
+          sans-serif;
+        margin-top: 0.4rem;
+      }
+      @keyframes drop {
+        from {
+          opacity: 0;
+          transform: translateY(-40px) rotate(0);
+        }
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+      .card {
+        background: var(--card);
+        border: 2px solid var(--ink);
+        border-radius: 6px;
+        padding: 1.2rem;
+      }
+      .card.s {
+        border: 0;
+        color: #14213d;
+        box-shadow: 3px 5px 0 rgba(20, 33, 61, 0.25);
+      }
+      .stages {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 1.5rem 0 1rem;
+      }
+      .stages button {
+        flex: 1 1 130px;
+        border: 2px solid var(--ink);
+        background: var(--card);
+        color: var(--ink);
+        padding: 0.8rem;
+        border-radius: 8px;
+        font:
+          700 1rem "Bricolage Grotesque",
+          sans-serif;
+        cursor: pointer;
+      }
+      .stages button[aria-selected="true"] {
+        background: var(--c);
+        color: #14213d;
+        transform: translateY(-3px);
+        box-shadow: 0 4px 0 var(--ink);
+      }
+      .panel {
+        background: var(--card);
+        border: 2px solid var(--ink);
+        border-left: 12px solid var(--c);
+        border-radius: 6px;
+        padding: 1.6rem;
+      }
+      .panel ul {
+        padding-left: 1.2rem;
+        margin: 0.5rem 0;
+      }
+      .tl {
+        border-left: 3px solid var(--ink);
+        margin: 1.5rem 0;
+        padding-left: 1.4rem;
+      }
+      .tl div {
+        position: relative;
+        margin-bottom: 1.6rem;
+      }
+      .tl div:before {
+        content: "";
+        position: absolute;
+        left: -2.05rem;
+        top: 0.45rem;
+        width: 14px;
+        height: 14px;
+        background: var(--y);
+        border: 3px solid var(--ink);
+        border-radius: 50%;
+      }
+      .tl h3 {
+        margin-bottom: 0.2rem;
+      }
+      .tools {
+        list-style: none;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1rem;
+      }
+      .emp {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+      }
+      .emp label {
+        font-weight: 700;
+        display: block;
+        margin-bottom: 0.3rem;
+      }
+      textarea {
+        width: 100%;
+        min-height: 90px;
+        border: 2px solid var(--ink);
+        border-radius: 6px;
+        padding: 0.6rem;
+        font: inherit;
+        background: var(--card);
+        color: var(--ink);
+        resize: vertical;
+      }
+      .opt {
+        display: block;
+        width: 100%;
+        text-align: left;
+        margin: 0.5rem 0;
+        padding: 0.8rem 1rem;
+        border: 2px solid var(--ink);
+        border-radius: 8px;
+        background: var(--card);
+        color: var(--ink);
+        font: inherit;
+        cursor: pointer;
+      }
+      .opt.right {
+        background: var(--g);
+        color: #14213d;
+      }
+      .opt.wrong {
+        background: var(--p);
+        color: #14213d;
+      }
+      .bar {
+        height: 10px;
+        background: var(--line);
+        border-radius: 9px;
+        overflow: hidden;
+        margin: 1rem 0;
+      }
+      .bar i {
+        display: block;
+        height: 100%;
+        background: var(--y);
+        width: 0;
+        transition: width 0.3s;
+      }
+      footer {
+        border-top: 2px solid var(--ink);
+        padding: 1.5rem 1.2rem;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      @media (max-width: 760px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+        .wall {
+          height: 300px;
+        }
+        .emp {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav aria-label="Main">
+      <b>Design Thinking Studio</b>
+      <a href="#home">Home</a><a href="#process">The 5 stages</a
+      ><a href="#case">Case study</a><a href="#toolkit">Toolkit</a
+      ><a href="#quiz">Quiz</a>
+    </nav>
+    <main>
+      <section class="page" id="home">
+        <div class="hero">
+          <div>
+            <h1>Solve the right problem before you solve it.</h1>
+            <p>
+              Design thinking is a way of creating ideas by starting with
+              people, not products. Learn the five stages, see how Airbnb used
+              them, and try the tools yourself.
+            </p>
+            <a class="btn" href="#process">Learn the 5 stages</a>
+            <a class="btn alt" href="#quiz">Test yourself</a>
+          </div>
+          <div class="wall" aria-hidden="true">
+            <div
+              class="note"
+              style="
+                background: var(--y);
+                left: 0;
+                top: 10px;
+                transform: rotate(-6deg);
+              "
+            >
+              Empathize<small>Listen to real people</small>
+            </div>
+            <div
+              class="note"
+              style="
+                background: var(--p);
+                left: 120px;
+                top: 0;
+                transform: rotate(5deg);
+                animation-delay: 0.15s;
+              "
+            >
+              Define<small>Name the real problem</small>
+            </div>
+            <div
+              class="note"
+              style="
+                background: var(--b);
+                left: 230px;
+                top: 80px;
+                transform: rotate(-3deg);
+                animation-delay: 0.3s;
+              "
+            >
+              Ideate<small>Many ideas, no judging</small>
+            </div>
+            <div
+              class="note"
+              style="
+                background: var(--g);
+                left: 20px;
+                top: 170px;
+                transform: rotate(4deg);
+                animation-delay: 0.45s;
+              "
+            >
+              Prototype<small>Build it cheap and fast</small>
+            </div>
+            <div
+              class="note"
+              style="
+                background: var(--o);
+                left: 150px;
+                top: 190px;
+                transform: rotate(-5deg);
+                animation-delay: 0.6s;
+              "
+            >
+              Test<small>Learn, then improve</small>
+            </div>
+          </div>
+        </div>
+
+        <h2>What is design thinking?</h2>
+        <p>
+          It is a repeatable method for solving messy problems. Instead of
+          guessing what people want, you watch, ask, and test. A hospital that
+          wants shorter waits might discover the real problem is confusing
+          signs, not slow doctors.
+        </p>
+        <div class="grid">
+          <div class="card s" style="background: var(--y)">
+            <h3>Human-first</h3>
+            <p>Every decision starts with a real person's needs.</p>
+          </div>
+          <div class="card s" style="background: var(--b)">
+            <h3>Try, don't guess</h3>
+            <p>Cheap prototypes teach you more than long meetings.</p>
+          </div>
+          <div class="card s" style="background: var(--g)">
+            <h3>Never a straight line</h3>
+            <p>You can go back to any stage when you learn something new.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="process">
+        <h2>The 5 stages</h2>
+        <p>
+          Select a stage to see what to do, how long it takes, and a method to
+          try.
+        </p>
+        <div class="stages" role="tablist" id="tabs"></div>
+        <div class="panel" id="panel" role="tabpanel" aria-live="polite"></div>
+      </section>
+
+      <section class="page" id="case">
+        <h2>Case study: Airbnb</h2>
+        <p>
+          In 2009 Airbnb was close to failing. Bookings were flat at about $200
+          a week. Here is how design thinking changed that.
+        </p>
+        <div class="tl">
+          <div>
+            <h3>Empathize</h3>
+            <p>
+              The founders flew to New York and stayed with hosts. They saw that
+              listing photos were dark and blurry, so guests did not trust them.
+            </p>
+          </div>
+          <div>
+            <h3>Define</h3>
+            <p>
+              The problem was not the website. It was that strangers could not
+              judge a home from poor photos.
+            </p>
+          </div>
+          <div>
+            <h3>Ideate</h3>
+            <p>
+              They considered new features, but chose a simple idea: take better
+              photos themselves.
+            </p>
+          </div>
+          <div>
+            <h3>Prototype</h3>
+            <p>
+              They rented a camera and photographed hosts' homes by hand. It did
+              not scale, and that was fine for a first test.
+            </p>
+          </div>
+          <div>
+            <h3>Test</h3>
+            <p>
+              Weekly revenue in those cities doubled. Airbnb later built a
+              professional photography program for hosts.
+            </p>
+          </div>
+        </div>
+        <div class="card s" style="background: var(--y)">
+          <h3>Lesson</h3>
+          <p>
+            Talking to users in person showed the real problem. Doing something
+            unscalable first was the fastest way to learn.
+          </p>
+        </div>
+      </section>
+
+      <section class="page" id="toolkit">
+        <h2>Toolkit</h2>
+        <p>Free ways to practice each stage.</p>
+        <ul class="tools">
+          <li class="card">
+            <h3>Miro</h3>
+            <p>Online whiteboard for sticky notes and journey maps.</p>
+          </li>
+          <li class="card">
+            <h3>Figma / FigJam</h3>
+            <p>Sketch screens and run brainstorms with a team.</p>
+          </li>
+          <li class="card">
+            <h3>Paper and pens</h3>
+            <p>The fastest prototyping tool. Sketch in five minutes.</p>
+          </li>
+          <li class="card">
+            <h3>Google Forms</h3>
+            <p>Collect quick feedback from 10 to 20 users.</p>
+          </li>
+        </ul>
+        <h2 style="margin-top: 2rem">Try it: build an empathy map</h2>
+        <p>
+          Think of one person you want to help, such as a classmate who
+          struggles to find study spots. Fill in each box.
+        </p>
+        <div class="emp">
+          <div>
+            <label for="e1">Says</label
+            ><textarea
+              id="e1"
+              placeholder="What do they say out loud?"
+            ></textarea>
+          </div>
+          <div>
+            <label for="e2">Thinks</label
+            ><textarea id="e2" placeholder="What is on their mind?"></textarea>
+          </div>
+          <div>
+            <label for="e3">Does</label
+            ><textarea
+              id="e3"
+              placeholder="What actions do you see?"
+            ></textarea>
+          </div>
+          <div>
+            <label for="e4">Feels</label
+            ><textarea
+              id="e4"
+              placeholder="What emotions do they have?"
+            ></textarea>
+          </div>
+        </div>
+        <p style="margin-top: 1rem">
+          <button class="btn" id="fin">Write my problem statement</button>
+        </p>
+        <div class="card s" style="background: var(--g)" id="ps" hidden></div>
+      </section>
+
+      <section class="page" id="quiz">
+        <h2>Quick quiz</h2>
+        <div class="bar"><i id="pb"></i></div>
+        <div id="qbox"></div>
+      </section>
+    </main>
+    <footer>
+      Made by [Your name] · Design Thinking project · Add your contact here
+    </footer>
+
+    <script>
+      const S = [
+        {
+          n: "Empathize",
+          c: "#FFD84D",
+          t: "Understand the people you are designing for.",
+          l: [
+            "Interview 5 people",
+            "Watch how they behave",
+            "Note what surprises you",
+          ],
+          m: "Empathy map",
+          d: "1 to 3 days",
+        },
+        {
+          n: "Define",
+          c: "#FF9DB0",
+          t: "Turn what you learned into one clear problem.",
+          l: [
+            "Group your notes into themes",
+            "Write a problem statement",
+            "Check it is about a person, not a solution",
+          ],
+          m: "'How might we' question",
+          d: "Half a day",
+        },
+        {
+          n: "Ideate",
+          c: "#94D6FF",
+          t: "Come up with as many ideas as possible.",
+          l: [
+            "Set a 10 minute timer",
+            "Write one idea per sticky note",
+            "Vote on the top three",
+          ],
+          m: "Brainstorm or Crazy 8s",
+          d: "1 hour",
+        },
+        {
+          n: "Prototype",
+          c: "#B4E8A6",
+          t: "Make a cheap version people can react to.",
+          l: [
+            "Sketch on paper",
+            "Build a clickable mockup",
+            "Focus on one key question",
+          ],
+          m: "Paper prototype",
+          d: "1 to 2 days",
+        },
+        {
+          n: "Test",
+          c: "#FFB877",
+          t: "Show it to real users and watch what happens.",
+          l: [
+            "Ask users to try a task",
+            "Do not explain, just observe",
+            "Record what worked and what didn't",
+          ],
+          m: "Usability test",
+          d: "1 to 2 days",
+        },
+      ];
+      const tabs = document.getElementById("tabs"),
+        panel = document.getElementById("panel");
+      function showStage(i) {
+        [...tabs.children].forEach((b, j) =>
+          b.setAttribute("aria-selected", i == j),
+        );
+        const s = S[i];
+        panel.style.setProperty("--c", s.c);
+        panel.innerHTML = `<h3>${i + 1}. ${s.n}</h3><p>${s.t}</p><ul>${s.l.map((x) => `<li>${x}</li>`).join("")}</ul><p><b>Method to try:</b> ${s.m}<br><b>Typical time:</b> ${s.d}</p>`;
+      }
+      S.forEach((s, i) => {
+        const b = document.createElement("button");
+        b.textContent = s.n;
+        b.role = "tab";
+        b.style.setProperty("--c", s.c);
+        b.onclick = () => showStage(i);
+        tabs.appendChild(b);
+      });
+      showStage(0);
+
+      document.getElementById("fin").onclick = () => {
+        const v = (id) => document.getElementById(id).value.trim();
+        const p = document.getElementById("ps");
+        p.hidden = false;
+        p.innerHTML =
+          v("e1") || v("e2") || v("e3") || v("e4")
+            ? `<h3>Your next step</h3><p>Your person feels <b>${v("e4") || "…"}</b> and often <b>${v("e3") || "…"}</b>. Write: "How might we help them so that this feeling and behavior improves?" Then move on to Ideate.</p>`
+            : `<p>Fill in at least one box first.</p>`;
+      };
+
+      const Q = [
+        ["Which stage comes first?", ["Prototype", "Empathize", "Test"], 1],
+        [
+          "What is a 'How might we' question used for?",
+          [
+            "Defining a problem in an open way",
+            "Planning a budget",
+            "Writing code",
+          ],
+          0,
+        ],
+        [
+          "Why prototype cheaply?",
+          [
+            "It looks better",
+            "To learn fast before spending more",
+            "Users prefer paper",
+          ],
+          1,
+        ],
+        [
+          "During ideation you should...",
+          [
+            "Pick one idea right away",
+            "Judge every idea",
+            "Create many ideas without judging",
+          ],
+          2,
+        ],
+        [
+          "Design thinking is...",
+          [
+            "A strict straight line",
+            "A loop you can revisit",
+            "Only for designers",
+          ],
+          1,
+        ],
+      ];
+      let qi = 0,
+        sc = 0;
+      const qb = document.getElementById("qbox"),
+        pb = document.getElementById("pb");
+      function q() {
+        pb.style.width = (qi / Q.length) * 100 + "%";
+        if (qi >= Q.length) {
+          qb.innerHTML = `<div class="card s" style="background:var(--y)"><h3>You scored ${sc} of ${Q.length}</h3><p>${sc >= 4 ? "Great work. You are ready to run a project." : "Review the 5 stages and try again."}</p><button class="btn" id="rs">Try again</button></div>`;
+          document.getElementById("rs").onclick = () => {
+            qi = 0;
+            sc = 0;
+            q();
+          };
+          return;
+        }
+        const [t, o, a] = Q[qi];
+        qb.innerHTML =
+          `<h3>${qi + 1}. ${t}</h3>` +
+          o
+            .map((x, i) => `<button class="opt" data-i="${i}">${x}</button>`)
+            .join("");
+        qb.querySelectorAll(".opt").forEach(
+          (b) =>
+            (b.onclick = () => {
+              const i = +b.dataset.i;
+              if (i === a) sc++;
+              qb.querySelectorAll(".opt").forEach((x, j) => {
+                x.disabled = true;
+                if (j === a) x.classList.add("right");
+                else if (j === i) x.classList.add("wrong");
+              });
+              setTimeout(() => {
+                qi++;
+                q();
+              }, 900);
+            }),
+        );
+      }
+      q();
+
+      const pages = ["home", "process", "case", "toolkit", "quiz"];
+      function route() {
+        const h = (location.hash || "#home").slice(1);
+        const p = pages.includes(h) ? h : "home";
+        document
+          .querySelectorAll(".page")
+          .forEach((e) => e.classList.toggle("on", e.id === p));
+        document
+          .querySelectorAll("nav a")
+          .forEach((a) =>
+            a.classList.toggle("on", a.getAttribute("href") === "#" + p),
+          );
+        window.scrollTo(0, 0);
+      }
+      addEventListener("hashchange", route);
+      route();
+    </script>
+  </body>
+</html>
